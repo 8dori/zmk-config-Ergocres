@@ -30,8 +30,13 @@
 	};
 };
 
+#include <input/processors/report_rate_limit.dtsi>
+
 &trackball_split_L {
     device = <&trackball_L>;
+    // Rate-limit on the peripheral so the split BLE link is not flooded.
+    // (Originally applied on the central, where it added delay without reducing BLE load.)
+    input-processors = <&zip_report_rate_limit 8>;
 };
 
 &i2c0 {

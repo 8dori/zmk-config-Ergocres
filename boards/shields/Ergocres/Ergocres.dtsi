@@ -37,7 +37,8 @@ split_inputs {
             <&zip_xy_scaler 1 16>,
             <&zip_scroll_scaler 1 5>,
             <&zip_xy_to_scroll_mapper>,
-            <&zip_report_rate_limit 12>, <&zip_xyz>;
+            <&zip_xyz>;
+        // rate limit moved to the left half (peripheral) side: see Ergocres_L.overlay
     };
 
     trackball_listener_R: trackball_listener_R {
@@ -45,7 +46,7 @@ split_inputs {
       status = "disabled";
         input-processors =
            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>,
-           <&zip_report_rate_limit 12>;
+           <&zip_report_rate_limit 8>;  // was 12ms (~83Hz); 8ms matches 7.5ms BLE interval
     };
     
     kscan0: kscan {
@@ -53,6 +54,8 @@ split_inputs {
         label = "KSCAN";
         diode-direction = "col2row";
         wakeup-source;
+        debounce-press-ms = <1>;    // default 5ms -> 1ms (faster key press)
+        debounce-release-ms = <5>;
 
         row-gpios
             = <&xiao_d 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
