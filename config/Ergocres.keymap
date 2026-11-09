@@ -80,6 +80,12 @@
 &trans  &trans  &trans  &mkp MB1  &mkp MB3  &mkp MB2    &trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
+
+        // Spare layers for ZMK Studio / the key-config app ("Add layer")
+        extra_layer_4 { status = "reserved"; };
+        extra_layer_5 { status = "reserved"; };
+        extra_layer_6 { status = "reserved"; };
+        extra_layer_7 { status = "reserved"; };
     };
 
     conditional_layers {

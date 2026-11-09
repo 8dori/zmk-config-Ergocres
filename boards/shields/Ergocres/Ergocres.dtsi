@@ -7,6 +7,7 @@
 
 #include <input/processors/report_rate_limit.dtsi>
 #include <input/processors/xyz.dtsi>
+#include <input/processors/temp_layer.dtsi>
 
 &uicr {
     nfct-pins-as-gpios;
@@ -46,6 +47,7 @@ split_inputs {
       status = "disabled";
         input-processors =
            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>,
+           <&zip_temp_layer 3 700>,     // auto mouse layer: Mouse (layer 3) while the cursor moves, off 700ms after it stops
            <&zip_report_rate_limit 8>;  // was 12ms (~83Hz); 8ms matches 7.5ms BLE interval
     };
     
@@ -150,4 +152,10 @@ split_inputs {
             , <&key_physical_attrs 100 100 1150  500       0     0     0>
             ;
     };
-}; 
+};
+
+// Auto mouse layer settings
+&zip_temp_layer {
+    require-prior-idle-ms = <300>;     // do not trigger right after typing (accidental ball touch)
+    excluded-positions = <51 52 53>;   // mouse buttons on the Mouse layer keep it active
+};
