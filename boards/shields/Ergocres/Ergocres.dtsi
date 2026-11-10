@@ -7,7 +7,6 @@
 
 #include <input/processors/report_rate_limit.dtsi>
 #include <input/processors/xyz.dtsi>
-#include <input/processors/temp_layer.dtsi>
 
 &uicr {
     nfct-pins-as-gpios;
@@ -35,11 +34,9 @@ split_inputs {
       device = <&trackball_split_L>;
         input-processors =
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)>,
-            <&zip_xy_scaler 1 16>,
-            <&zip_scroll_scaler 1 5>,
-            <&zip_xy_to_scroll_mapper>,
+            <&scroll_runtime_input_processor>,   // speed adjustable from the web app ("scroll")
             <&zip_xyz>;
-        // rate limit moved to the left half (peripheral) side: see Ergocres_L.overlay
+        // rate limit is on the left half (peripheral) side: see Ergocres_L.overlay
     };
 
     trackball_listener_R: trackball_listener_R {
@@ -47,10 +44,10 @@ split_inputs {
       status = "disabled";
         input-processors =
            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>,
-           <&zip_temp_layer 3 700>,     // auto mouse layer: Mouse (layer 3) while the cursor moves, off 700ms after it stops
+           <&mouse_runtime_input_processor>,    // speed + auto mouse layer adjustable from the web app ("mouse")
            <&zip_report_rate_limit 8>;  // was 12ms (~83Hz); 8ms matches 7.5ms BLE interval
     };
-    
+
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
         label = "KSCAN";
@@ -154,8 +151,27 @@ split_inputs {
     };
 };
 
-// Auto mouse layer settings
-&zip_temp_layer {
-    require-prior-idle-ms = <300>;     // do not trigger right after typing (accidental ball touch)
-    excluded-positions = <51 52 53>;   // mouse buttons on the Mouse layer keep it active
+// Runtime input processors (defaults; the web app / Studio can change and save them)
+// Included here at the end: it pulls in keys.h, whose RC() macro clashes with the
+// matrix transform's RC(row,col) above.
+#include <input/processors/runtime-input-processor.dtsi>
+
+&mouse_runtime_input_processor {
+    scale-multiplier = <1>;
+    scale-divisor = <1>;
+    // Auto mouse layer: Mouse (layer 3) while the cursor moves, off 700ms after it stops.
+    // Not activated within 300ms of a key press (accidental ball touch while typing).
+    // Keys on the Mouse layer (the click keys) keep it active.
+    temp-layer-enabled;
+    temp-layer = <3>;
+    temp-layer-activation-delay-ms = <300>;
+    temp-layer-deactivation-delay-ms = <700>;
+};
+
+&scroll_runtime_input_processor {
+    x-codes = <INPUT_REL_X>;
+    y-codes = <INPUT_REL_Y>;
+    xy-to-scroll-enabled;   // X/Y -> horizontal/vertical wheel (was zip_xy_to_scroll_mapper)
+    scale-multiplier = <1>;
+    scale-divisor = <16>;   // same speed as before (zip_xy_scaler 1 16)
 };
