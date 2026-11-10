@@ -11,16 +11,16 @@ manifest:
   projects:
     - name: zmk
       remote: zmkfirmware
-      revision: main
+      revision: 4dd95d7840eb3d5a3f59bb29fbf1ab054715ef85  # pinned (was main)
       import: app/west.yml
     - name: zmk-input-processor-report-rate-limit
       remote: MeowCatpawkittie
-      revision: main
+      revision: a297d1526c7b4a917c9105bcf9f5b2935514261c  # pinned (was main)
     - name: zmk-input-processor-xyz
       remote: badjeff
-      revision: main
+      revision: edb44b7261796a11b3aaecc0f75f1da615789b90  # pinned (was main)
     - name: zmk-rgbled-widget
       remote: caksoylar
-      revision: main
+      revision: e6b467792a1dabef8cfa5c9fd26bfefc9c16662b  # pinned (was main)
   self:
     path: config
