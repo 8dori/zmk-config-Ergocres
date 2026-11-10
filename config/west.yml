@@ -8,10 +8,14 @@ manifest:
       url-base: https://github.com/caksoylar
     - name: badjeff
       url-base: https://github.com/badjeff
+    - name: cormoran
+      url-base: https://github.com/cormoran
   projects:
+    # Unofficial ZMK with custom Studio RPC (needed for runtime trackball speed).
+    # Official ZMK was 4dd95d7840eb3d5a3f59bb29fbf1ab054715ef85 on zmkfirmware.
     - name: zmk
-      remote: zmkfirmware
-      revision: 4dd95d7840eb3d5a3f59bb29fbf1ab054715ef85  # pinned (was main)
+      remote: cormoran
+      revision: 1fc72aaff7a42bd533c1f4c9b3f23c5317c745f4  # main+custom-studio-protocol
       import: app/west.yml
     - name: zmk-input-processor-report-rate-limit
       remote: MeowCatpawkittie
@@ -22,5 +26,11 @@ manifest:
     - name: zmk-rgbled-widget
       remote: caksoylar
       revision: e6b467792a1dabef8cfa5c9fd26bfefc9c16662b  # pinned (was main)
+    - name: zmk-module-runtime-input-processor
+      remote: cormoran
+      revision: decf628d7ce5ed95b520c650824c28ea9de649c1  # pinned (main)
+    - name: zmk-feature-custom-settings
+      remote: cormoran
+      revision: c6a7fef3a3be3d3ace5de9a4b0628c6418cd1f3f  # pinned (main)
   self:
     path: config
